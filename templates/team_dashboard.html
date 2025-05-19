@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Dashboard - Escape from College</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="team-container">
+        <header class="team-header">
+            <div class="logo">
+                <i class="fas fa-key logo-icon"></i>
+                <span>Escape from College</span>
+            </div>
+            <div class="user-info">
+                <span>{{ session.get('teamname') }}</span>
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </header>
+        
+        <main class="team-content">
+            <div class="progress-tracker">
+                <div class="progress-step {% if current_round > 1 %}completed{% elif current_round == 1 %}active{% endif %}">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Round 1</div>
+                </div>
+                <div class="progress-connector {% if current_round > 1 %}completed{% endif %}"></div>
+                <div class="progress-step {% if current_round > 2 %}completed{% elif current_round == 2 %}active{% endif %}">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Round 2</div>
+                </div>
+                <div class="progress-connector {% if current_round > 2 %}completed{% endif %}"></div>
+                <div class="progress-step {% if current_round > 3 %}completed{% elif current_round == 3 %}active{% endif %}">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Round 3</div>
+                </div>
+            </div>
+            
+            <div class="flash-messages">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+            
+            <div class="clue-card">
+                <div class="card-header">
+                    <h2>Round {{ current_round }} Clue</h2>
+                </div>
+                <div class="card-body">
+                    <div class="clue-content">
+                        <i class="fas fa-search clue-icon"></i>
+                        <p class="clue-text">{{ clue }}</p>
+                    </div>
+                    
+                    <form action="{{ url_for('submit_answer') }}" method="post" class="answer-form">
+                        <div class="form-group">
+                            <label for="answer">Your Answer:</label>
+                            <input type="text" id="answer" name="answer" required autocomplete="off" placeholder="Enter your answer...">
+                        </div>
+                        
+                        <button type="submit" class="btn primary-btn submit-btn">
+                            <i class="fas fa-paper-plane"></i> Submit Answer
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <div class="info-header">
+                    <i class="fas fa-lightbulb"></i>
+                    <h3>Helpful Tips</h3>
+                </div>
+                <ul class="tips-list">
+                    <li>Read the clue carefully and look for hidden meanings</li>
+                    <li>Try to think outside the box</li>
+                    <li>Answers are not case-sensitive</li>
+                    <li>You can try as many times as needed</li>
+                    <li>Work as a team to solve the puzzles faster</li>
+                </ul>
+            </div>
+        </main>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

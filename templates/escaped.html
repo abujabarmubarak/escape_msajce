@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You've Escaped! - Escape from College</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container escaped-container">
+        <div class="escaped-card">
+            <div class="celebration-icon">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            
+            <h1 class="escaped-title">Congratulations!</h1>
+            <h2 class="escaped-subtitle">You've Escaped!</h2>
+            
+            <div class="confetti-animation"></div>
+            
+            <p class="escaped-message">
+                Team <span class="team-name">{{ session.get('teamname') }}</span> has successfully completed all challenges and escaped from college!
+            </p>
+            
+            <div class="action-buttons">
+                <a href="{{ url_for('logout') }}" class="btn primary-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/confetti.js') }}"></script>
+    <script>
+        // Start confetti animation when page loads
+        window.addEventListener('load', function() {
+            startConfetti();
+        });
+    </script>
+</body>
+</html>

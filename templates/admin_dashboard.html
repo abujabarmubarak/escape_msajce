@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Escape from College</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <div class="logo">
+                <i class="fas fa-key logo-icon"></i>
+                <span>Escape from College</span>
+            </div>
+            <div class="user-info">
+                <span>Admin</span>
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </header>
+        
+        <div class="admin-content">
+            <div class="sidebar">
+                <ul class="nav-links">
+                    <li class="active">
+                        <a href="{{ url_for('admin_dashboard') }}">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('leaderboard') }}">
+                            <i class="fas fa-trophy"></i> Leaderboard
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <main class="main-content">
+                <h1>Admin Dashboard</h1>
+                
+                <div class="flash-messages">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                </div>
+                
+                <div class="card upload-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-file-upload"></i> Upload Team Data</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-description">
+                            Upload an Excel file (.xlsx) containing team details. The file should have the following columns:
+                        </p>
+                        <ul class="requirements-list">
+                            <li>teamname</li>
+                            <li>username</li>
+                            <li>password</li>
+                            <li>clue1</li>
+                            <li>round1_answer</li>
+                            <li>clue2</li>
+                            <li>round2_answer</li>
+                            <li>clue3</li>
+                            <li>round3_answer</li>
+                        </ul>
+                        
+                        <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data" class="upload-form">
+                            <div class="file-input-container">
+                                <input type="file" name="file" id="file" accept=".xlsx" required>
+                                <label for="file" class="file-label">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <span>Choose Excel File</span>
+                                </label>
+                                <span id="file-name" class="file-name">No file chosen</span>
+                            </div>
+                            
+                            <button type="submit" class="btn primary-btn">
+                                <i class="fas fa-upload"></i> Upload
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card info-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-info-circle"></i> Event Information</h2>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            Welcome to the admin dashboard for "Escape from College" event. From here, you can:
+                        </p>
+                        <ul>
+                            <li>Upload team details using an Excel file</li>
+                            <li>View the leaderboard to track team progress</li>
+                            <li>Monitor which team is leading the escape challenge</li>
+                        </ul>
+                        <p>
+                            Make sure your Excel file contains all the required columns with appropriate clues and answers for each team.
+                        </p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        // Display selected filename
+        document.getElementById('file').addEventListener('change', function(e) {
+            const fileName = e.target.files[0] ? e.target.files[0].name : 'No file chosen';
+            document.getElementById('file-name').textContent = fileName;
+        });
+    </script>
+</body>
+</html>

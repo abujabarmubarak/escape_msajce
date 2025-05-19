@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - Escape from College</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <div class="logo">
+                <i class="fas fa-key logo-icon"></i>
+                <span>Escape from College</span>
+            </div>
+            <div class="user-info">
+                <span>Admin</span>
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </header>
+        
+        <div class="admin-content">
+            <div class="sidebar">
+                <ul class="nav-links">
+                    <li>
+                        <a href="{{ url_for('admin_dashboard') }}">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="{{ url_for('leaderboard') }}">
+                            <i class="fas fa-trophy"></i> Leaderboard
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <main class="main-content">
+                <h1>Leaderboard</h1>
+                
+                <div class="flash-messages">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                </div>
+                
+                {% if leader %}
+                <div class="leader-card">
+                    <div class="leader-badge">
+                        <i class="fas fa-crown"></i> Team Leader
+                    </div>
+                    <h2>{{ leader[1] }}</h2>
+                    <p>Completed All Rounds</p>
+                    <div class="completion-times">
+                        <div class="time-item">
+                            <span class="label">Round 1 completed:</span>
+                            <span class="time">{{ leader[3] }}</span>
+                        </div>
+                        <div class="time-item">
+                            <span class="label">Round 2 completed:</span>
+                            <span class="time">{{ leader[4] }}</span>
+                        </div>
+                        <div class="time-item">
+                            <span class="label">Round 3 completed:</span>
+                            <span class="time">{{ leader[5] }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="card leaderboard-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-list-ol"></i> Team Rankings</h2>
+                    </div>
+                    <div class="card-body">
+                        {% if teams %}
+                        <div class="table-container">
+                            <table class="leaderboard-table">
+                                <thead>
+                                    <tr>
+                                        <th>Rank</th>
+                                        <th>Team Name</th>
+                                        <th>Current Round</th>
+                                        <th>Round 1 Completed</th>
+                                        <th>Round 2 Completed</th>
+                                        <th>Round 3 Completed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for team in teams %}
+                                    <tr {% if leader and team[0] == leader[0] %}class="leader-row"{% endif %}>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ team[1] }}</td>
+                                        <td>
+                                            {% if team[2] == 4 %}
+                                                <span class="completed-badge">Escaped!</span>
+                                            {% else %}
+                                                Round {{ team[2] }}
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ team[3] or 'Not completed' }}</td>
+                                        <td>{{ team[4] or 'Not completed' }}</td>
+                                        <td>{{ team[5] or 'Not completed' }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <div class="empty-state">
+                            <i class="fas fa-users-slash"></i>
+                            <p>No teams have been added yet. Please upload team data first.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="card info-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-info-circle"></i> Leaderboard Information</h2>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            Teams are ranked based on their progress through the escape challenge:
+                        </p>
+                        <ul>
+                            <li>Teams that have completed all rounds are at the top</li>
+                            <li>Teams are then sorted by their current round (higher rounds first)</li>
+                            <li>For teams on the same round, sorting is based on completion time</li>
+                        </ul>
+                        <p>
+                            The first team to complete all three rounds will be highlighted as the "Team Leader".
+                        </p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
